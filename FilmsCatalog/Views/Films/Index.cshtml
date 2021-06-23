@@ -1,0 +1,59 @@
+﻿@model PagedList.IPagedList<FilmsCatalog.Models.ViewModels.FilmViewModel>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewData["Title"] = "Каталог фильмов";
+}
+
+<h1>Каталог фильмов</h1>
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        <a asp-action="AddFilm">Добавить фильм</a>
+    </p>
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+@if (TempData["Alert"] != null)
+{
+    <div class="alert alert-danger">@TempData["Alert"]</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="gallery">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="galleryItem">
+                    <img src="@item.Path">
+                </td>
+                <td>
+                    @Html.ActionLink("Подробнее", "Details", new { id = item.FilmId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        @for (int i = 0; i < Model.PageCount; i++)
+        {
+            <li class="page-item"><a class="page-link" asp-controller="Films" asp-action="Index" asp-route-page="@(i+1)">@(i+1)</a></li>
+        }
+    </ul>
+</nav>
